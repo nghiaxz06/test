@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050811">
+<title>Nghiaxz Dev | Cyberpunk Bio Link</title>
+<meta name="author" content="Nghiaxz Dev">
+<meta name="copyright" content="Copyright © 2026 Nghiaxz Dev.">
+<meta name="description" content="Senior Fullstack Developer & Cybersecurity Enthusiast">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#00f0ff;--secondary:#ff007f;--accent:#7000ff;--bg-dark:#050811;--card-bg:rgba(10,15,30,0.85);--text-glow:0 0 10px rgba(0,240,255,0.7)}
+*{-webkit-tap-highlight-color:transparent}
+body{font-family:'Plus Jakarta Sans',sans-serif;background-color:var(--bg-dark);color:#e2e8f0;overflow-x:hidden}
+.font-orbitron{font-family:'Orbitron',sans-serif}
+.font-code{font-family:'Fira Code',monospace}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg-dark)}
+::-webkit-scrollbar-thumb{background:var(--primary);border-radius:3px}
+#cyber-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none}
+.cyber-card{background:var(--card-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.1);position:relative;box-shadow:0 0 35px rgba(0,240,255,.15)}
+.cyber-card::before{content:'';position:absolute;inset:-2px;border-radius:26px;padding:2px;background:linear-gradient(135deg,var(--primary),transparent 40%,var(--secondary));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:.8;animation:borderGlow 6s infinite linear}
+@keyframes borderGlow{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(360deg)}}
+.glitch-text{position:relative;display:inline-block;color:var(--primary);text-shadow:var(--text-glow)}
+.glitch-text::before,.glitch-text::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%;opacity:.8}
+.glitch-text::before{left:2px;text-shadow:-2px 0 var(--secondary);clip:rect(24px,550px,90px,0);animation:glitch-anim-1 3s infinite linear alternate-reverse}
+.glitch-text::after{left:-2px;text-shadow:-2px 0 var(--accent);clip:rect(85px,550px,140px,0);animation:glitch-anim-2 2.5s infinite linear alternate-reverse}
+@keyframes glitch-anim-1{0%{clip:rect(10px,9999px,30px,0)}20%{clip:rect(40px,9999px,10px,0)}40%{clip:rect(70px,9999px,80px,0)}60%{clip:rect(20px,9999px,50px,0)}80%{clip:rect(60px,9999px,90px,0)}100%{clip:rect(30px,9999px,20px,0)}}
+@keyframes glitch-anim-2{0%{clip:rect(60px,9999px,10px,0)}20%{clip:rect(10px,9999px,70px,0)}40%{clip:rect(30px,9999px,20px,0)}60%{clip:rect(80px,9999px,40px,0)}80%{clip:rect(40px,9999px,60px,0)}100%{clip:rect(20px,9999px,90px,0)}}
+.avatar-ring{position:absolute;inset:-6px;border-radius:50%;background:conic-gradient(from 0deg,var(--primary),var(--secondary),var(--accent),var(--primary));animation:spinRing 4s linear infinite}
+@keyframes spinRing{100%{transform:rotate(360deg)}}
+.cyber-button{position:relative;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);overflow:hidden;transition:all .3s cubic-bezier(.25,.8,.25,1);touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.cyber-button::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);transition:left .6s ease}
+.cyber-button:hover::before{left:100%}
+.cyber-button:hover{transform:translateY(-3px) scale(1.01);border-color:var(--primary);box-shadow:0 0 20px rgba(0,240,255,.25);background:rgba(255,255,255,.07)}
+#toast{transform:translateY(100px);opacity:0;transition:all .3s cubic-bezier(.68,-.55,.265,1.55)}
+#toast.show{transform:translateY(0);opacity:1}
+.viz{display:none;gap:2px;align-items:flex-end;height:12px;margin-left:2px}
+.viz.on{display:flex}
+.viz span{width:2.5px;background:var(--primary);border-radius:2px;height:30%;animation:viz .9s ease-in-out infinite}
+.viz span:nth-child(2){animation-delay:.15s;height:70%}
+.viz span:nth-child(3){animation-delay:.3s;height:45%}
+.viz span:nth-child(4){animation-delay:.45s;height:80%}
+@keyframes viz{0%,100%{height:25%}50%{height:100%}}
+</style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 relative">
+
+<canvas id="cyber-canvas"></canvas>
+
+<div id="yt-player-container" style="position:fixed; bottom:0; left:0; width:240px; height:240px; opacity:0.001; pointer-events:none; z-index:-9999;"></div>
+
+<main class="cyber-card relative z-10 w-full max-w-md rounded-3xl p-6 sm:p-8 my-6">
+    <header class="flex items-center justify-start mb-6 pb-4 border-b border-slate-800/80">
+        <div class="flex items-center space-x-2 bg-slate-900/80 px-3 py-1.5 rounded-full border border-slate-700/60 text-xs">
+            <button id="music-toggle" class="text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1.5 cursor-pointer">
+                <i id="music-icon" class="fas fa-play text-xs"></i>
+                <span id="music-text" class="font-code font-semibold">Nhạc nền</span>
+            </button>
+            <div class="viz" id="viz"><span></span><span></span><span></span><span></span></div>
+        </div>
+    </header>
+
+    <div class="flex flex-col items-center text-center">
+        <div class="relative w-28 h-28 mb-4">
+            <div class="avatar-ring"></div>
+            <img id="profile-avatar" src="https://i.ibb.co/s94HRLg2/GTok-D6256-E4-C-676-A-45-DD-B8-AF-AFE4-B1-B6609-E.jpg" 
+                 onerror="this.onerror=null; this.src='https://placehold.co/300x300/0f172a/00f0ff?text=Nghiaxz+Dev'" 
+                 alt="Nghiaxz Dev Avatar" 
+                 class="relative z-10 w-full h-full rounded-full object-cover p-1 bg-slate-950 shadow-inner">
+            <div class="absolute bottom-1 right-1 z-20 flex items-center justify-center w-5 h-5 bg-emerald-500 rounded-full ring-4 ring-slate-950" title="Status: Online & Ready">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            </div>
+        </div>
+
+        <h1 id="profile-name" class="font-orbitron text-2xl sm:text-3xl font-black tracking-wider glitch-text uppercase mb-2" data-text="NGHIAXZ DEV">NGHIAXZ DEV</h1>
+
+        <div class="font-code text-cyan-400 text-[11px] sm:text-sm font-medium min-h-6 mb-4 flex items-center justify-center text-center px-2 leading-snug">
+            <span id="typing-text"></span><span class="animate-pulse">_</span>
+        </div>
+
+        <p id="profile-bio" class="text-slate-400 text-xs sm:text-sm leading-relaxed max-w-xs mb-6">Đam mê kiến tạo sản phẩm số chất lượng cao. Chuyên nghiệp, tối ưu &amp; bảo mật tuyệt đối.</p>
+    </div>
+
+    <nav class="space-y-3.5 mb-6">
+        <a href="https://youtube.com/@nghiaxzpro" target="_blank" rel="noopener noreferrer" class="cyber-button flex items-center justify-between p-3.5 rounded-xl text-slate-200 group">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-slate-900 border border-slate-700/80 flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform"><i class="fab fa-youtube text-lg"></i></div>
+                <div class="text-left">
+                    <div class="font-semibold text-sm">YouTube Channel</div>
+                    <div class="text-[11px] text-slate-400 font-code">@nghiaxzpro</div>
+                </div>
+            </div>
+            <span class="font-code text-xs px-2 py-1 rounded bg-red-950/60 text-red-400 border border-red-800/50">▶</span>
+        </a>
+
+        <a href="https://www.facebook.com/share/18QPCjKxw1/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" class="cyber-button flex items-center justify-between p-3.5 rounded-xl text-slate-200 group">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-slate-900 border border-slate-700/80 flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform"><i class="fab fa-facebook-f text-lg"></i></div>
+                <div class="text-left">
+                    <div class="font-semibold text-sm">Facebook Profile</div>
+                    <div class="text-[11px] text-slate-400 font-code">Kết nối truyền thông</div>
+                </div>
+            </div>
+            <i class="fas fa-chevron-right text-xs text-slate-500 group-hover:text-cyan-400 transition-colors"></i>
+        </a>
+
+        <a href="https://t.me/Nguyen_Van_Nghia" target="_blank" rel="noopener noreferrer" class="cyber-button flex items-center justify-between p-3.5 rounded-xl text-slate-200 group">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-slate-900 border border-slate-700/80 flex items-center justify-center text-sky-400 group-hover:scale-110 transition-transform"><i class="fab fa-telegram-plane text-lg"></i></div>
+                <div class="text-left">
+                    <div class="font-semibold text-sm">Telegram</div>
+                    <div class="text-[11px] text-slate-400 font-code">@Nguyen_Van_Nghia</div>
+                </div>
+            </div>
+            <i class="fas fa-chevron-right text-xs text-slate-500 group-hover:text-cyan-400 transition-colors"></i>
+        </a>
+    </nav>
+
+    <div class="grid grid-cols-2 gap-3 mb-6">
+        <button onclick="copyToClipboard('ng.nghia080906@gmail.com', 'Đã sao chép Gmail!')" class="cyber-button p-3 rounded-xl flex items-center justify-center gap-2 text-xs font-semibold text-slate-300 cursor-pointer">
+            <i class="fas fa-copy text-cyan-400"></i> Copy Gmail
+        </button>
+        <button onclick="shareProfile()" class="cyber-button p-3 rounded-xl flex items-center justify-center gap-2 text-xs font-semibold text-slate-300 cursor-pointer">
+            <i class="fas fa-share-nodes text-pink-500"></i> Chia sẻ Bio
+        </button>
+    </div>
+
+    <footer class="pt-4 border-t border-slate-800/80 text-center font-code text-[11px] text-slate-500">
+        <p class="mb-1">&copy; 2026 <strong class="text-cyan-400 font-normal">Nghiaxz Dev</strong>.</p>
+        <p class="text-[10px] text-slate-600">Protected by Developer Copyright Policy</p>
+    </footer>
+</main>
+
+<div id="toast" class="fixed bottom-6 z-50 bg-slate-900 border border-cyan-500/50 text-cyan-300 font-code text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2">
+    <i class="fas fa-check-circle text-emerald-400 text-sm"></i>
+    <span id="toast-message">Nội dung đã được sao chép!</span>
+</div>
+
+<script>
+const CANVAS=document.getElementById('cyber-canvas');
+const ctx=CANVAS.getContext('2d');
+let width,height;
+function resizeCanvas(){width=CANVAS.width=window.innerWidth;height=CANVAS.height=window.innerHeight;}
+window.addEventListener('resize',resizeCanvas);
+resizeCanvas();
+const particles=[];
+const particleCount=Math.min(Math.floor(window.innerWidth/15),65);
+for(let i=0;i<particleCount;i++){particles.push({x:Math.random()*width,y:Math.random()*height,vx:(Math.random()-.5)*.8,vy:(Math.random()-.5)*.8,size:Math.random()*2+1});}
+function drawParticles(){
+  ctx.clearRect(0,0,width,height);
+  const pc='rgba(0,240,255,';
+  for(let i=0;i<particles.length;i++){
+    let p=particles[i];
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0||p.x>width)p.vx*=-1;
+    if(p.y<0||p.y>height)p.vy*=-1;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fillStyle=pc+'0.6)';ctx.fill();
+    for(let j=i+1;j<particles.length;j++){
+      let p2=particles[j];
+      let dist=Math.hypot(p.x-p2.x,p.y-p2.y);
+      if(dist<120){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p2.x,p2.y);ctx.strokeStyle=pc+(1-dist/120)*.15+')';ctx.lineWidth=.8;ctx.stroke();}
+    }
+  }
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+const welcomeText="Chào mừng bạn đến với bio link của Nghiaxz Dev";
+let charIndex=0;
+const typingText=document.getElementById('typing-text');
+function typeEffect(){
+  if(charIndex<welcomeText.length){
+    typingText.textContent=welcomeText.substring(0,charIndex+1);
+    charIndex++;
+    setTimeout(typeEffect,70);
+  }
+}
+typeEffect();
+
+const musicIcon=document.getElementById('music-icon');
+const musicText=document.getElementById('music-text');
+const musicBtn=document.getElementById('music-toggle');
+const viz=document.getElementById('viz');
+let isPlaying=false;
+let ytPlayer=null;
+let ytReady=false;
+
+function setMusicUI(playing,label){
+  if(playing){musicIcon.className="fas fa-pause text-xs text-pink-500";musicText.textContent=label||"Đang phát";viz.classList.add('on');}
+  else{musicIcon.className="fas fa-play text-xs";musicText.textContent=label||"Nhạc nền";viz.classList.remove('on');}
+}
+
+window.onYouTubeIframeAPIReady = function() {
+  ytPlayer = new YT.Player('yt-player-container', {
+    height: '240',
+    width: '240',
+    videoId: 'KjFiaqqebJ4',
+    playerVars: {
+      autoplay: 0,
+      loop: 1,
+      playlist: 'KjFiaqqebJ4',
+      controls: 0,
+      disablekb: 1,
+      fs: 0,
+      modestbranding: 1,
+      playsinline: 1,
+      rel: 0
+    },
+    events: {
+      'onReady': function(event) {
+        ytReady = true;
+        setupInteractionAutoplay();
+      },
+      'onStateChange': function(event) {
+        if (event.data === YT.PlayerState.PLAYING) {
+          isPlaying = true;
+          setMusicUI(true, 'Đang phát');
+        } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+          isPlaying = false;
+          setMusicUI(false, 'Nhạc nền');
+        } else if (event.data === YT.PlayerState.BUFFERING) {
+          setMusicUI(false, 'Đang tải...');
+        }
+      },
+      'onError': function(event) {
+        console.warn('YouTube API error:', event.data);
+        showToast('Lỗi phát nhạc. YouTube có thể chặn nhúng bài này.');
+        setMusicUI(false, 'Lỗi nhạc');
+      }
+    }
+  });
+};
+
+function setupInteractionAutoplay() {
+  const playOnInteraction = () => {
+    if (ytReady && ytPlayer && typeof ytPlayer.playVideo === 'function' && !isPlaying) {
+      ytPlayer.playVideo();
+    }
+    document.removeEventListener('click', playOnInteraction);
+    document.removeEventListener('touchstart', playOnInteraction);
+    document.removeEventListener('keydown', playOnInteraction);
+  };
+  document.addEventListener('click', playOnInteraction);
+  document.addEventListener('touchstart', playOnInteraction);
+  document.addEventListener('keydown', playOnInteraction);
+}
+
+function toggleAudio(e) {
+  if(e) e.stopPropagation(); 
+  if (!ytReady || !ytPlayer || typeof ytPlayer.playVideo !== 'function') {
+    showToast('Đang tải nhạc, đợi xíu nhé...');
+    return;
+  }
+  if (isPlaying) {
+    ytPlayer.pauseVideo();
+  } else {
+    ytPlayer.playVideo();
+  }
+}
+musicBtn.addEventListener('click', toggleAudio);
+
+(function loadYT(){
+  const t = document.createElement('script');
+  t.src = 'https://www.youtube.com/iframe_api';
+  t.async = true;
+  document.head.appendChild(t);
+})();
+
+function copyToClipboard(t,m){
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(()=>showToast(m)).catch(()=>fallbackCopy(t,m));}
+  else fallbackCopy(t,m);
+}
+function fallbackCopy(t,m){
+  const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');showToast(m);}catch(e){showToast('Không thể sao chép!');}
+  document.body.removeChild(ta);
+}
+function showToast(msg){
+  const toast=document.getElementById('toast');
+  document.getElementById('toast-message').textContent=msg;
+  toast.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t=setTimeout(()=>toast.classList.remove('show'),3000);
+}
+function shareProfile(){
+  if(navigator.share){navigator.share({title:'Nghiaxz Dev | Link Bio',url:window.location.href}).catch(()=>{});}
+  else copyToClipboard(window.location.href,'Đã sao chép đường dẫn Bio!');
+}
+
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{
+  if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C'].includes(e.key))||(e.ctrlKey&&(e.key==='u'||e.key==='U'))){e.preventDefault();return false;}
+});
+document.addEventListener('dragstart',e=>{if(e.target.tagName==='IMG')e.preventDefault();});
+document.addEventListener('selectstart',e=>{if(e.target.tagName==='IMG')e.preventDefault();});
+</script>
+</body>
+</html>
